@@ -6,13 +6,13 @@ import userRoutes from "./routes/userRoute.js"
 
 // import aiRoutes from './routes/ai.routes.js';
 import cookieParser from 'cookie-parser';
-// import cors from 'cors';
+import cors from 'cors';
 connect();
 
 
 const app = express();
 
-// app.use(cors());
+app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
