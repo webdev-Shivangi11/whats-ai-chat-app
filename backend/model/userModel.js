@@ -1,199 +1,182 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import projectModel from '../models/project.model.js';
-import mongoose from 'mongoose';
-
-export const createProject = async ({
-    name, userId
-}) => {
-    if (!name) {
-        throw new Error('Name is required')
-    }
-    if (!userId) {
-        throw new Error('UserId is required')
-    }
-
-    let project;
-    try {
-        project = await projectModel.create({
-            name,
-            users: [ userId ]
-        });
-    } catch (error) {
-        if (error.code === 11000) {
-            throw new Error('Project name already exists');
-        }
-        throw error;
-    }
-
-    return project;
-
-}
-
-
-export const getAllProjectByUserId = async ({ userId }) => {
-    if (!userId) {
-        throw new Error('UserId is required')
-    }
-
-    const allUserProjects = await projectModel.find({
-        users: userId
-    })
-
-    return allUserProjects
-}
-
-export const addUsersToProject = async ({ projectId, users, userId }) => {
-
-    if (!projectId) {
-        throw new Error("projectId is required")
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(projectId)) {
-        throw new Error("Invalid projectId")
-    }
-
-    if (!users) {
-        throw new Error("users are required")
-    }
-
-    if (!Array.isArray(users) || users.some(userId => !mongoose.Types.ObjectId.isValid(userId))) {
-        throw new Error("Invalid userId(s) in users array")
-    }
-
-    if (!userId) {
-        throw new Error("userId is required")
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-        throw new Error("Invalid userId")
-    }
-
-
-    const project = await projectModel.findOne({
-        _id: projectId,
-        users: userId
-    })
-
-    console.log(project)
-
-    if (!project) {
-        throw new Error("User not belong to this project")
-    }
-
-    const updatedProject = await projectModel.findOneAndUpdate({
-        _id: projectId
-    }, {
-        $addToSet: {
-            users: {
-                $each: users
-            }
-        }
-    }, {
-        new: true
-    })
-
-    return updatedProject
-
-
-
-}
-
-export const getProjectById = async ({ projectId }) => {
-    if (!projectId) {
-        throw new Error("projectId is required")
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(projectId)) {
-        throw new Error("Invalid projectId")
-    }
-
-    const project = await projectModel.findOne({
-        _id: projectId
-    }).populate('users')
-
-    return project;
-}
-
-export const updateFileTree = async ({ projectId, fileTree }) => {
-    if (!projectId) {
-        throw new Error("projectId is required")
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(projectId)) {
-        throw new Error("Invalid projectId")
-    }
-
-    if (!fileTree) {
-        throw new Error("fileTree is required")
-    }
-
-    const project = await projectModel.findOneAndUpdate({
-        _id: projectId
-    }, {
-        fileTree
-    }, {
-        new: true
-    })
-
-    return project;
-}
-
-
-
-// import mongoose from "mongoose";
-// import bcrypt from "bcrypt";
-// import jwt from "jsonwebtoken";
-
-// const userSchema = new mongoose.Schema({
-//     email: {
-//         type: String,
-//         required: true,
-//         unique: true,
-//         trim: true,
-//         lowercase: true,
-//         minLength: [ 6, 'Email must be at least 6 characters long' ],
-//         maxLength: [ 50, 'Email must not be longer than 50 characters' ]
-//     },
-
-//     password: {
-//         type: String,
-//         select: false,
+// import mongoose from 'mongoose';
+// import projectModel from "../model/projectModel.js"
+// export const createProject = async ({
+//     name, userId
+// }) => {
+//     if (!name) {
+//         throw new Error('Name is required')
 //     }
-// })
+//     if (!userId) {
+//         throw new Error('UserId is required')
+//     }
 
+//     let project;
+//     try {
+//         project = await projectModel.create({
+//             name,
+//             users: [ userId ]
+//         });
+//     } catch (error) {
+//         if (error.code === 11000) {
+//             throw new Error('Project name already exists');
+//         }
+//         throw error;
+//     }
 
-// userSchema.statics.hashPassword = async function (password) {
-//     return await bcrypt.hash(password, 10);
+//     return project;
+
 // }
 
-// userSchema.methods.isValidPassword = async function (password) {
-//     return await bcrypt.compare(password, this.password);
+
+// export const getAllProjectByUserId = async ({ userId }) => {
+//     if (!userId) {
+//         throw new Error('UserId is required')
+//     }
+
+//     const allUserProjects = await projectModel.find({
+//         users: userId
+//     })
+
+//     return allUserProjects
 // }
 
-// userSchema.methods.generateJWT = function () {
-//     return jwt.sign(
-//         { email: this.email },
-//         process.env.JWT_SECRET,
-//         { expiresIn: '24h' }
-//     );
+// export const addUsersToProject = async ({ projectId, users, userId }) => {
+
+//     if (!projectId) {
+//         throw new Error("projectId is required")
+//     }
+
+//     if (!mongoose.Types.ObjectId.isValid(projectId)) {
+//         throw new Error("Invalid projectId")
+//     }
+
+//     if (!users) {
+//         throw new Error("users are required")
+//     }
+
+//     if (!Array.isArray(users) || users.some(userId => !mongoose.Types.ObjectId.isValid(userId))) {
+//         throw new Error("Invalid userId(s) in users array")
+//     }
+
+//     if (!userId) {
+//         throw new Error("userId is required")
+//     }
+
+//     if (!mongoose.Types.ObjectId.isValid(userId)) {
+//         throw new Error("Invalid userId")
+//     }
+
+
+//     const project = await projectModel.findOne({
+//         _id: projectId,
+//         users: userId
+//     })
+
+//     console.log(project)
+
+//     if (!project) {
+//         throw new Error("User not belong to this project")
+//     }
+
+//     const updatedProject = await projectModel.findOneAndUpdate({
+//         _id: projectId
+//     }, {
+//         $addToSet: {
+//             users: {
+//                 $each: users
+//             }
+//         }
+//     }, {
+//         new: true
+//     })
+
+//     return updatedProject
+
+
+
+// }
+
+// export const getProjectById = async ({ projectId }) => {
+//     if (!projectId) {
+//         throw new Error("projectId is required")
+//     }
+
+//     if (!mongoose.Types.ObjectId.isValid(projectId)) {
+//         throw new Error("Invalid projectId")
+//     }
+
+//     const project = await projectModel.findOne({
+//         _id: projectId
+//     }).populate('users')
+
+//     return project;
+// }
+
+// export const updateFileTree = async ({ projectId, fileTree }) => {
+//     if (!projectId) {
+//         throw new Error("projectId is required")
+//     }
+
+//     if (!mongoose.Types.ObjectId.isValid(projectId)) {
+//         throw new Error("Invalid projectId")
+//     }
+
+//     if (!fileTree) {
+//         throw new Error("fileTree is required")
+//     }
+
+//     const project = await projectModel.findOneAndUpdate({
+//         _id: projectId
+//     }, {
+//         fileTree
+//     }, {
+//         new: true
+//     })
+
+//     return project;
 // }
 
 
-// const User = mongoose.model('user', userSchema);
 
-// export default User;
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+const userSchema = new mongoose.Schema({
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true,
+        minLength: [ 6, 'Email must be at least 6 characters long' ],
+        maxLength: [ 50, 'Email must not be longer than 50 characters' ]
+    },
+
+    password: {
+        type: String,
+        select: false,
+    }
+})
+
+
+userSchema.statics.hashPassword = async function (password) {
+    return await bcrypt.hash(password, 10);
+}
+
+userSchema.methods.isValidPassword = async function (password) {
+    return await bcrypt.compare(password, this.password);
+}
+
+userSchema.methods.generateJWT = function () {
+    return jwt.sign(
+        { email: this.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '24h' }
+    );
+}
+
+
+const User = mongoose.model('user', userSchema);
+
+export default User

@@ -62,7 +62,7 @@ export const loginController = async (req, res) => {
         res.status(400).send(err.message);
     }
 }
-
+//only for one authenticate user fro this we make a  auth middleware
 export const profileController = async (req, res) => {
 console.log(req.user);
 

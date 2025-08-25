@@ -7,6 +7,7 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
     const [ user, setUser ] = useState(null);
 
+
     return (
         <UserContext.Provider value={{ user, setUser }}>
             {children}
@@ -14,3 +15,8 @@ export const UserProvider = ({ children }) => {
     );
 };
 
+//custom hook to use the UserContext
+
+export const useUser=()=>{
+    return useContext(UserContext)
+};

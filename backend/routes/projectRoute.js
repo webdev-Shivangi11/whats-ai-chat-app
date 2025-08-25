@@ -5,10 +5,10 @@ import * as authMidlleware from "../midlleware/authMidlleware.js";
 const router = Router();
 
 
-router.post("/",
+router.post("/create",
      authMidlleware.authUser,
     body('name').notEmpty().withMessage('Project name is required'),
     projectController.createProject
 )
-router.get("/", projectController.getAllProjectsByUserId);
+// router.get("/", projectController.getAllProjectsByUserId);
 export default router;

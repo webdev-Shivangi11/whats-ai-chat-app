@@ -1,11 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { UserContext } from '../context/user.context'
 import axios from "../config/axios"
 import { useNavigate } from 'react-router-dom'
+import { UserContext } from '../context/userContext'
 
 const Home = () => {
 
     const { user } = useContext(UserContext)
+
+   
     const [ isModalOpen, setIsModalOpen ] = useState(false)
     const [ projectName, setProjectName ] = useState(null)
     const [ project, setProject ] = useState([])

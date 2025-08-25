@@ -1,7 +1,8 @@
+
 import userModel from "../model/userModel.js";
 
 
-export  const createUser = async ({
+export const createUser = async ({
     email, password
 }) => {
 
