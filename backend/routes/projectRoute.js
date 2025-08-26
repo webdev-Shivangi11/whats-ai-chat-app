@@ -11,5 +11,5 @@ router.post("/create",
     body('name').isString().withMessage('Project name is required'),
     projectController.createProject
 )
-// router.get("/", projectController.getAllProjectsByUserId);
+router.get("/all", projectController.getAllProjects);
 export default router;
