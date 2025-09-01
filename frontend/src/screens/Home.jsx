@@ -28,15 +28,16 @@ const Home = () => {
             })
     }
 
-    // useEffect(() => {
-    //     axios.get('/projects/all').then((res) => {
-    //         setProject(res.data.projects)
+    useEffect(() => {
+        axios.get('/projects/all').then((res) => {
+            console.log(res.data)
+            setProject(res.data.projects)
 
-    //     }).catch(err => {
-    //         console.log(err)
-    //     })
+        }).catch(err => {
+            console.log(err)
+        })
 
-    // }, [])
+    }, [])
 
     return (<>
         {/* <Navbar/> */}
@@ -57,25 +58,13 @@ const Home = () => {
                    </div>      
 
                 {
-                    project.map((project) => (
-                        <div key={project._id}
-                            onClick={() => {
-                                navigate(`/project`, {
-                                    state: { project }
-                                })
-                            }}
-                            className="project flex flex-col gap-2 cursor-pointer p-4 border border-slate-300 rounded-md min-w-52 hover:bg-slate-200">
-                            <h2
-                                className='font-semibold'
-                            >{project.name}</h2>
-
-                            <div className="flex gap-2">
-                                <p> <small> <i className="ri-user-line"></i> Collaborators</small> :</p>
-                                {project.users.length}
-                            </div>
-
-                        </div>
-                    ))
+       project.map((project)=>{
+        <div key={project._id}
+        className='project  flex flex-col gap-2 cursor-pointer p-4 border border-slate-300 rounded-md min-w-52 hover:bg-slate-200'>
+        {project.name}
+        <i className='ri-link ml-2'></i>
+        </div>
+       })
                 }
 
 
@@ -92,6 +81,7 @@ const Home = () => {
                                     onChange={(e) => setProjectName(e.target.value)}
                                     value={projectName}
                                     type="text" className="mt-1 block w-full p-2 border border-gray-600 rounded-md" required />
+
                             </div>
                             <div className="flex justify-end">
                                 <button type="button" className="mr-2 px-4 py-2 bg-gray-300 rounded-md" onClick={() => setIsModalOpen(false)}>Cancel</button>
