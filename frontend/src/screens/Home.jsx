@@ -21,7 +21,7 @@ const Home = () => {
         })
             .then((res) => {
                 console.log(res)
-            //     setIsModalOpen(false)
+                setIsModalOpen(false)
             })
             .catch((error) => {
                 console.log(error)
@@ -55,17 +55,29 @@ const Home = () => {
                     New Project
                     <i className="ri-link ml-2 text-white"></i>
                      </button>
+                                {
+                    project.map((project) => (
+                        <div key={project._id}
+                            onClick={() => {
+                                navigate(`/project`, {
+                                    state: { project }
+                                })
+                            }}
+                            className="project flex flex-col gap-2 cursor-pointer p-4 border border-slate-300 rounded-md min-w-52 hover:bg-slate-200">
+                            <h2
+                                className='font-semibold'
+                            >{project.name}</h2>
+
+                            <div className="flex gap-2">
+                                <p> <small> <i className="ri-user-line"></i> Collaborators</small> :</p>
+                                {project.users.length}
+                            </div>
+
+                        </div>
+                    ))
+                }
                    </div>      
 
-                {
-       project.map((project)=>{
-        <div key={project._id}
-        className='project  flex flex-col gap-2 cursor-pointer p-4 border border-slate-300 rounded-md min-w-52 hover:bg-slate-200'>
-        {project.name}
-        <i className='ri-link ml-2'></i>
-        </div>
-       })
-                }
 
 
             </div>
