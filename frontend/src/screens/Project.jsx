@@ -28,6 +28,18 @@ const handleUserClick=(id)=>{
 }
 
 
+ function addCollaborators() {
+        axios.put("/projects/add-user", {
+            projectId: location.state.project._id,
+            users: Array.from(selectedUserId)
+        }).then(res => {
+            console.log(res.data)
+            setIsModalOpen(false)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
 useEffect(()=>{
 
  axios.get(`/projects/get-project/${location.state.project._id}`).then(res => {
@@ -46,17 +58,6 @@ axios.get('/users/all').then(res=>{
 
 },[])
 
- function addCollaborators() {
-        axios.put("/projects/add-user", {
-            projectId: location.state.project._id,
-            users: Array.from(selectedUserId)
-        }).then(res => {
-            // console.log(res.data)
-            setIsModalOpen(false)
-        }).catch(err => {
-            console.log(err)
-        })
-    }
 
   return (
  <main className='h-screen w-screen flex'>
@@ -121,7 +122,7 @@ axios.get('/users/all').then(res=>{
                                     <div className='aspect-square rounded-full w-fit h-fit flex items-center justify-center p-5 text-white bg-slate-600'>
                                         <i className="ri-user-fill absolute"></i>
                                     </div>
-                                    <h1 className='font-semibold text-lg'>{user.email}</h1>
+                                    <h1 className='font-semibold text-lg  text-gray-300'>{user.email}</h1>
                                     {/* <h1 className='font-semibold text-lg text-gray-300'>emailabhgvj</h1> */}
                                     
                                 </div>
