@@ -30,7 +30,7 @@ const Home = () => {
 
     useEffect(() => {
         axios.get('/projects/all').then((res) => {
-            console.log(res.data)
+            // console.log(res.data)
             setProject(res.data.projects)
 
         }).catch(err => {
@@ -42,7 +42,7 @@ const Home = () => {
     return (<>
         {/* <Navbar/> */}
         <main className='p-4'>
-            <div className="projects h-screen flex flex-wrap gap-2  bg-gray-800 p-40">
+            <div className="projects h-auto flex flex-wrap gap-2  bg-gray-800 p-40">
                 <div className='flex gap-2 flex-col'>
                     {/* <h1 className='text-8xl text-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'> Build Meaningful Connection and elevate  your Career</h1> */}
                     <h1 className='text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 p-4'> Build Meaningful Connection and elevate  your Career</h1>
@@ -55,6 +55,27 @@ const Home = () => {
                     New Project
                     <i className="ri-link ml-2 text-white"></i>
                      </button>
+{/* {project.map((project) => (
+  <div
+    key={project._id}
+    onClick={() => {
+      navigate('/all-project', {
+        state: { project }
+      })
+    }}
+    className="project flex flex-col gap-2 cursor-pointer p-4 border border-slate-300 rounded-md min-w-52 hover:bg-slate-200 hover:scale-[1.02] transition-transform duration-200 bg-white"
+  >
+    <h2 className="font-semibold text-lg text-gray-800">{project.name}</h2>
+    <div className="flex gap-2 text-sm text-gray-600">
+      <p>
+        <i className="ri-user-line"></i> Collaborators:
+      </p>
+      <span>{project.users?.length || 0}</span>
+    </div>
+  </div>
+))} */}
+
+
                                 {
                     project.map((project) => (
                         <div key={project._id}

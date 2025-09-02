@@ -5,6 +5,7 @@ import Register from '../screens/Register'
 import Home from '../screens/Home'
 
 import Project from '../screens/Project'
+import AllProjects from '../screens/AllProjects'
 function AppRoutes() {
   return (
  <BrowserRouter>
@@ -14,6 +15,7 @@ function AppRoutes() {
                 <Route path="/login" element={<Login/>} />
                 <Route path="/register" element={<Register/>} />
                 <Route path="/project" element={<Project />} />
+                <Route path="/all-project" element={<AllProjects/>} />
             </Routes>
 
         </BrowserRouter>  )
