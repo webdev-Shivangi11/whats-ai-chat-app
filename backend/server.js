@@ -18,12 +18,12 @@ io.use((socket,next)=>{
 const token = socket.handshake.auth?.token || socket.handshake.headers.authorization?.split(' ')[ 1 ];
         const projectId = socket.handshake.query.projectId;
 
-        // if (!mongoose.Types.ObjectId.isValid(projectId)) {
-        //     return next(new Error('Invalid projectId'));
-        // }
+        if (!mongoose.Types.ObjectId.isValid(projectId)) {
+            return next(new Error('Invalid projectId'));
+        }
 
 
-        // socket.project =  projectModel.findById(projectId);
+        socket.project =  projectModel.findById(projectId);
 
 
         if (!token) {
@@ -47,6 +47,14 @@ const token = socket.handshake.auth?.token || socket.handshake.headers.authoriza
 io.on('connection', socket=> {
     console.log('a useris connected');
     
+    socket.join(socket.project._id)
+
+    socket.on("project-message",data=>{
+      socket.broadcast.to(socket.project._id).emit("project-message",data)
+      console.log(data);
+      
+    })
+
   socket.on('disconnect', () => { 
     console.log('user disconnected');
 

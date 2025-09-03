@@ -3,17 +3,22 @@ import { useLocation ,useNavigate} from 'react-router-dom'
  import { useState } from 'react' 
  import axios from '../config/axios'
  import { initializeSocket, receiveMessage, sendMessage } from '../config/socket'
-
+import { UserContext } from '../context/userContext'
+import { useContext } from 'react'
 
 function Project() {
   const location=useLocation()
-  console.log(location.state)
+//   console.log(location.state)
    const [ isSidePanelOpen, setIsSidePanelOpen ] = useState(false)
      const [ isModalOpen, setIsModalOpen ] = useState(false)
 const [ selectedUserId, setSelectedUserId ] = useState([]) 
 const [project, setProject] = useState(location.state.project)
 
 const [users, setUsers] = useState([])
+const {user}=useContext(UserContext)
+const [message, setMessage] = useState("")
+
+
 const handleUserClick=(id)=>{
   // setSelectedUserId([...selectedUserId,id])
    setSelectedUserId(prevSelectedUserId => {
@@ -41,14 +46,22 @@ const handleUserClick=(id)=>{
         })
     }
 
-useEffect(()=>{
-initializeSocket()
+function send(){
+    sendMessage("project-message",{
+    message,
+    sender:user._id
+})
+setMessage("")
+}
 
-receiveMessage()
-sendMessage()
+useEffect(()=>{
+initializeSocket(project._id)
+receiveMessage("project-message",data=>{
+    console.log(data)
+})
  axios.get(`/projects/get-project/${location.state.project._id}`).then(res => {
 
-     console.log(location.state.project._id)
+    //  console.log(location.state.project._id)
             console.log(res.data.project)
 
             setProject(res.data.project)
@@ -101,11 +114,11 @@ axios.get('/users/all').then(res=>{
 
                     <div className="inputField w-full flex absolute bottom-0">
                         <input
-                            // value={message}
-                            // onChange={(e) => setMessage(e.target.value)}
+                            onChange={(e) => setMessage(e.target.value)}
+                            value={message}
                             className='p-2 px-4 border-none outline flex-grow text-gray-400' type="text" placeholder='Enter message' />
                         <button
-                            // onClick={send}
+                            onClick={send}
                             className='px-5 bg-slate-950 text-white'><i className="ri-send-plane-fill text-white"></i></button>
                     </div>
                 </div>
