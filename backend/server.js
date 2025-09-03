@@ -8,7 +8,11 @@ import mongoose from "mongoose";
 const port=process.env.PORT ||3000
 const server=http.createServer(app)
 // const server = require('http').createServer();
-const io = new Server(server);
+const io = new Server(server,{
+  cors:{
+    origin:"*"
+  }
+});
 io.use((socket,next)=>{
   try{
 const token = socket.handshake.auth?.token || socket.handshake.headers.authorization?.split(' ')[ 1 ];
@@ -43,8 +47,10 @@ const token = socket.handshake.auth?.token || socket.handshake.headers.authoriza
 io.on('connection', socket=> {
     console.log('a useris connected');
     
-  socket.on('event', data => { /* … */});
-  socket.on('disconnect', () => { /* … */ });
+  socket.on('disconnect', () => { 
+    console.log('user disconnected');
+
+   });
 });
 
 server.listen(port, () => {

@@ -22,7 +22,7 @@ router.put("/add-user",authMidlleware.authUser,
      projectController.addUserToProject
 );
 
-router.get("get-project/:projectId",
+router.get("/get-project/:projectId",
      authMidlleware.authUser,
      projectController.getProjectById
 )
