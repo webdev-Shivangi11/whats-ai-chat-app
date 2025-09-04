@@ -52,6 +52,7 @@ function send(){
     message,
     sender:user
 })
+appendOutgoingingMessage(message)
 setMessage("")
 }
 
@@ -87,6 +88,17 @@ function appendIncomingMessage(messageObject){
          <p className='text-m text-white'>${messageObject.message}</p>
     `
     messageBox.appendChild(message)
+
+}
+function appendOutgoingingMessage(messageObject){
+    const messageBox=document.querySelector(".message-box")
+    const newMessage=document.createElement("div")
+    newMessage.classList.add("message","ml-auto","max-w-96","flex","flex-col","bg-gray-800","p-2","rounded-md")
+    newMessage.innerHTML=`
+      <small className='opacity-65 text-xs text-gray-300 '>${user.email}</small>
+         <p className='text-m text-white'>${message}</p>
+    `
+    messageBox.appendChild(newMessage)
 
 }
   return (
