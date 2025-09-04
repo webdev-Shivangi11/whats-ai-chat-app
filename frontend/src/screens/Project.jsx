@@ -84,22 +84,26 @@ function appendIncomingMessage(messageObject){
     const message=document.createElement("div")
     message.classList.add("message","max-w-96","flex","flex-col","bg-gray-800","p-2","rounded-md")
     message.innerHTML=`
-      <small className='opacity-65 text-xs text-gray-300 '>${messageObject.sender.email}</small>
-         <p className='text-m text-white'>${messageObject.message}</p>
+      <small class='opacity-65 text-xs text-gray-300 '>${messageObject.sender.email}</small>
+         <p class='text-m text-white'>${messageObject.message}</p>
     `
     messageBox.appendChild(message)
-
+scrollToBottom()
 }
-function appendOutgoingingMessage(messageObject){
+function appendOutgoingingMessage(message){
     const messageBox=document.querySelector(".message-box")
     const newMessage=document.createElement("div")
     newMessage.classList.add("message","ml-auto","max-w-96","flex","flex-col","bg-gray-800","p-2","rounded-md")
     newMessage.innerHTML=`
-      <small className='opacity-65 text-xs text-gray-300 '>${user.email}</small>
-         <p className='text-m text-white'>${message}</p>
+      <small class='opacity-65 text-xs text-gray-300 '>${user.email}</small>
+         <p class='text-m text-white'>${message}</p>
     `
     messageBox.appendChild(newMessage)
+    scrollToBottom()
 
+}
+function scrollToBottom(){
+     messageBox.current.scrollTop = messageBox.current.scrollHeight
 }
   return (
  <main className='h-screen w-screen flex'>
@@ -116,25 +120,10 @@ function appendOutgoingingMessage(messageObject){
                 </header>
                 <div className="conversation-area pt-14 pb-10 flex-grow flex flex-col h-full relative">
 
-                    <div 
+                    <div
                       ref={messageBox}
-                    className="message-box p-1 flex-grow flex flex-col gap-2 overflow-auto max-h-full scrollbar-hide">
+                    className="message-box p-1 flex-grow flex flex-col gap-3 overflow-auto max-h-full scrollbar-hide mt-4">
                     
-                            <div   className= "message flex flex-col p-2 bg-gray-800 max-w-96 rounded-md">
-                                <small className='opacity-65 text-xs text-gray-300'>exampllbvcvjhbvh</small>
-                                <div className='text-m text-white '>
-                      
-                                       <p className=''>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia, beatae?</p>
-                                </div>
-                                 </div>
-                                <div className="incoming message ml-auto flex flex-col p-2 bg-gray-800 w-fit rounded-md">
-                                   <small className='opacity-65 text-xs text-gray-300 '>exampllbvcvjhbvh</small>
-                                <div className='text-m text-white'>
-                      
-                                       <p>Lorem ipsum  adipisicing elit. Quia, beatae?</p>
-                                </div>
-                                </div>
-                           
                         
                     </div>
 
@@ -166,7 +155,6 @@ function appendOutgoingingMessage(messageObject){
                                         <i className="ri-user-fill absolute"></i>
                                     </div>
                                     <h1  className='font-semibold text-lg  text-gray-300'>{user.email}</h1>
-                                    {/* <h1 className='font-semibold text-lg text-gray-300'>emailabhgvj</h1> */}
                                     
                                 </div>
                              ) 
