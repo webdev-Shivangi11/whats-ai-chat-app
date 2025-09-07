@@ -5,6 +5,7 @@ import { Server} from "socket.io";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose"; 
 import projectModel from "./model/projectModel.js";
+import main from "./services/genAiServices.js";
 // dotenv.config()
 const port=process.env.PORT ||3000
 const server=http.createServer(app)
@@ -49,9 +50,29 @@ io.on('connection', socket=> {
     
     socket.join(socket.roomId)
 
-    socket.on("project-message",data=>{
-      socket.broadcast.to(socket.roomId).emit("project-message",data)
-      console.log(data);
+    socket.on("project-message",async data=>{
+      // socket.broadcast.to(socket.roomId).emit("project-message",data)
+      // console.log(data);
+      
+        const message = data.message;
+
+        const aiIsPresentInMessage = message.includes('@ai');
+        socket.broadcast.to(socket.roomId).emit('project-message', data)
+
+        if (aiIsPresentInMessage) {
+
+
+            const prompt = message.replace('@ai', '');
+
+            const result = await main(prompt);
+             io.to(socket.roomId).emit('project-message', {
+                message: result,
+                sender: {
+                    _id: 'ai',
+                    email: 'AI'
+                }})
+                return
+        }
       
     })
 socket.on('event',data=>{ /*  */  })
