@@ -5,6 +5,8 @@ import { useLocation ,useNavigate} from 'react-router-dom'
  import { initializeSocket, receiveMessage, sendMessage } from '../config/socket'
 import { UserContext } from '../context/userContext'
 import { useContext } from 'react'
+import Markdown from 'markdown-to-jsx'
+
 
 function Project() {
   const location=useLocation()
@@ -17,6 +19,7 @@ const [project, setProject] = useState(location.state.project)
 const [users, setUsers] = useState([])
 const {user}=useContext(UserContext)
 const [message, setMessage] = useState("")
+const [messages, setMessages] = useState([])
     const navigate = useNavigate()
 const messageBox=React.createRef()
 
@@ -52,15 +55,19 @@ function send(){
     message,
     sender:user
 })
-appendOutgoingingMessage(message)
+// appendOutgoingingMessage(message)
+setMessages(prevMessages => [ ...prevMessages, { sender: user, message } ]) // Update messages state
+    
 setMessage("")
+
 }
 
 useEffect(()=>{
 initializeSocket(project._id)
 receiveMessage("project-message",data=>{
     console.log(data)
-    appendIncomingMessage(data)
+    // appendIncomingMessage(data)
+    setMessages(prevMessages=>[...prevMessages,data])
 })
  axios.get(`/projects/get-project/${location.state.project._id}`).then(res => {
 
@@ -79,29 +86,37 @@ axios.get('/users/all').then(res=>{
 
 },[])
 
-function appendIncomingMessage(messageObject){
-    const messageBox=document.querySelector(".message-box")
-    const message=document.createElement("div")
-    message.classList.add("message","max-w-96","flex","flex-col","bg-gray-800","p-2","rounded-md")
-    message.innerHTML=`
-      <small class='opacity-65 text-xs text-gray-300 '>${messageObject.sender.email}</small>
-         <p class='text-m text-white'>${messageObject.message}</p>
-    `
-    messageBox.appendChild(message)
-scrollToBottom()
-}
-function appendOutgoingingMessage(message){
-    const messageBox=document.querySelector(".message-box")
-    const newMessage=document.createElement("div")
-    newMessage.classList.add("message","ml-auto","max-w-96","flex","flex-col","bg-gray-800","p-2","rounded-md")
-    newMessage.innerHTML=`
-      <small class='opacity-65 text-xs text-gray-300 '>${user.email}</small>
-         <p class='text-m text-white'>${message}</p>
-    `
-    messageBox.appendChild(newMessage)
-    scrollToBottom()
+// function appendIncomingMessage(messageObject){
+//     const messageBox=document.querySelector(".message-box")
+//     const message=document.createElement("div")
+//     message.classList.add("message","max-w-96","flex","flex-col","bg-gray-800","p-2","rounded-md")
+//     if(messageObject.sender._id==="ai"){
+// const markDown =(<Markdown>{messageObject.message}</Markdown>)
+//   message.innerHTML=`
+//         <small class='opacity-65 text-xs text-gray-300 '>${messageObject.sender.email}</small>
+//         <p class='text-m text-white'>${markDown}</p> `
+            
+//     }else{
 
-}
+//         message.innerHTML=`
+//         <small class='opacity-65 text-xs text-gray-300 '>${messageObject.sender.email}</small>
+//         <p class='text-m text-white'>${messageObject.message}</p> `
+//              }
+//         messageBox.appendChild(message)
+//         scrollToBottom()
+// }
+// function appendOutgoingingMessage(message){
+//     const messageBox=document.querySelector(".message-box")
+//     const newMessage=document.createElement("div")
+//     newMessage.classList.add("message","ml-auto","max-w-96","flex","flex-col","bg-gray-800","p-2","rounded-md")
+//     newMessage.innerHTML=`
+//       <small class='opacity-65 text-xs text-gray-300 '>${user.email}</small>
+//          <p class='text-m text-white'>${message}</p>
+//     `
+//     messageBox.appendChild(newMessage)
+//     scrollToBottom()
+
+// }
 function scrollToBottom(){
      messageBox.current.scrollTop = messageBox.current.scrollHeight
 }
@@ -122,8 +137,24 @@ function scrollToBottom(){
 
                     <div
                       ref={messageBox}
-                    className="message-box p-1 flex-grow flex flex-col gap-3 overflow-auto max-h-full scrollbar-hide mt-4">
-                    
+                    // className="message-box p-1 flex-grow flex flex-col gap-3 overflow-auto max-h-full scrollbar-hide mt-4">
+                      className="message-box p-1 flex-grow flex flex-col gap-1 overflow-auto max-h-full scrollbar-hide">
+                        {messages.map((msg, index) => (
+                            <div key={index} className={`${msg.sender._id === 'ai' ? 'max-w-80' : 'max-w-52'} ${msg.sender._id == user._id.toString() && 'ml-auto'}  message flex flex-col p-2 bg-slate-50 w-fit rounded-md`}>
+                                <small className='opacity-65 text-xs'>{msg.sender.email}</small>
+                                <div className='text-sm'>
+                                    {msg.sender._id === 'ai' ?
+                                     <div className="overflow-auto bg-gray-900 text-gray-300">
+                                        <Markdown>{msg.message}</Markdown>
+                                        
+                                    </div>
+
+                                        // WriteAiMessage(msg.message)
+                                        : <p>{msg.message}</p>
+                                        }
+                                </div>
+                            </div>
+                        ))}
                         
                     </div>
 
@@ -150,7 +181,7 @@ function scrollToBottom(){
                         {project.users && project.users.map(user => {
 
                              return ( 
-                                <div key={user._id} className="user cursor-pointer hover:bg-slate-200 p-2 flex gap-2 items-center">
+                                <div className="user cursor-pointer hover:bg-slate-200 p-2 flex gap-2 items-center">
                                     <div className='aspect-square rounded-full w-fit h-fit flex items-center justify-center p-5 text-white bg-slate-600'>
                                         <i className="ri-user-fill absolute"></i>
                                     </div>
