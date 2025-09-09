@@ -45,7 +45,8 @@ const Home = () => {
             <div className="projects h-auto flex flex-wrap gap-2  bg-gray-800 p-40">
                 <div className='flex gap-2 flex-col'>
                     {/* <h1 className='text-8xl text-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'> Build Meaningful Connection and elevate  your Career</h1> */}
-                    <h1 className='text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 p-4'> Build Meaningful Connection and elevate  your Career</h1>
+                    {/* <h1 className='text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 p-4'> Build Meaningful Connection and elevate  your Career</h1> */}
+                    <h1 className='text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-bl from-[#e879f9] via-[#4ade80] to-[#be123c] p-4'> Build Meaningful Connection and elevate  your Career</h1>
                     <p className='text-gray-300 text-2xl p-6'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae amet officiis maiores quia odit accusantium, modi eius repudiandae natus, architecto at neque, magni velit suscipit laboriosam labore atque cumque alias.</p>
                         </div>                
                   <div>

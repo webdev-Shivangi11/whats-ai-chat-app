@@ -33,8 +33,9 @@ const Login = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-900">
-            <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
-                <h2 className="text-2xl font-bold text-white mb-6">Login</h2>
+            <div className="bg-gray-800 p-8 rounded-lg  w-full max-w-md 
+            shadow-2xl shadow-green-500">
+                <h2 className="text-3xl font-bold text-green-400 mb-6">Login</h2>
                 <form
                     onSubmit={submitHandler}
                 >
@@ -61,13 +62,13 @@ const Login = () => {
                     </div>
                     <button
                         type="submit"
-                        className="w-full p-3 rounded bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 rounded bg-green-500 text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         Login
                     </button>
                 </form>
                 <p className="text-gray-400 mt-4">
-                    Don't have an account? <Link to="/register" className="text-blue-500 hover:underline">Create one</Link>
+                    Don't have an account? <Link to="/register" className="text-green-500 hover:underline">Create one</Link>
                 </p>
             </div>
         </div>

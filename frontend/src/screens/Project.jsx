@@ -6,6 +6,23 @@ import { useLocation ,useNavigate} from 'react-router-dom'
 import { UserContext } from '../context/userContext'
 import { useContext } from 'react'
 import Markdown from 'markdown-to-jsx'
+// import hljs from 'highlight.js';
+import { useRef } from 'react'
+
+
+function SyntaxHighlightedCode(props) {
+    const ref = useRef(null)
+
+    React.useEffect(() => {
+        if (ref.current && props.className?.includes('lang-') && window.hljs) {
+            window.hljs.highlightElement(ref.current)
+
+            ref.current.removeAttribute('data-highlighted')
+        }
+    }, [ props.className, props.children ])
+
+    return <code {...props} ref={ref} />
+}
 
 
 function Project() {
@@ -55,18 +72,33 @@ function send(){
     message,
     sender:user
 })
-// appendOutgoingingMessage(message)
 setMessages(prevMessages => [ ...prevMessages, { sender: user, message } ]) // Update messages state
     
 setMessage("")
 
 }
+function WriteAiMessage(message) {
 
+        const messageObject = JSON.parse(message)
+
+        return (
+            <div
+                className='overflow-auto bg-slate-950 text-white rounded-sm p-2'
+            >
+                <Markdown
+                    children={messageObject.text}
+                    options={{
+                        overrides: {
+                            code: SyntaxHighlightedCode,
+                        },
+                    }}
+                />
+            </div>)
+    }
 useEffect(()=>{
 initializeSocket(project._id)
 receiveMessage("project-message",data=>{
     console.log(data)
-    // appendIncomingMessage(data)
     setMessages(prevMessages=>[...prevMessages,data])
 })
  axios.get(`/projects/get-project/${location.state.project._id}`).then(res => {
@@ -86,43 +118,13 @@ axios.get('/users/all').then(res=>{
 
 },[])
 
-// function appendIncomingMessage(messageObject){
-//     const messageBox=document.querySelector(".message-box")
-//     const message=document.createElement("div")
-//     message.classList.add("message","max-w-96","flex","flex-col","bg-gray-800","p-2","rounded-md")
-//     if(messageObject.sender._id==="ai"){
-// const markDown =(<Markdown>{messageObject.message}</Markdown>)
-//   message.innerHTML=`
-//         <small class='opacity-65 text-xs text-gray-300 '>${messageObject.sender.email}</small>
-//         <p class='text-m text-white'>${markDown}</p> `
-            
-//     }else{
 
-//         message.innerHTML=`
-//         <small class='opacity-65 text-xs text-gray-300 '>${messageObject.sender.email}</small>
-//         <p class='text-m text-white'>${messageObject.message}</p> `
-//              }
-//         messageBox.appendChild(message)
-//         scrollToBottom()
-// }
-// function appendOutgoingingMessage(message){
-//     const messageBox=document.querySelector(".message-box")
-//     const newMessage=document.createElement("div")
-//     newMessage.classList.add("message","ml-auto","max-w-96","flex","flex-col","bg-gray-800","p-2","rounded-md")
-//     newMessage.innerHTML=`
-//       <small class='opacity-65 text-xs text-gray-300 '>${user.email}</small>
-//          <p class='text-m text-white'>${message}</p>
-//     `
-//     messageBox.appendChild(newMessage)
-//     scrollToBottom()
-
-// }
 function scrollToBottom(){
      messageBox.current.scrollTop = messageBox.current.scrollHeight
 }
   return (
  <main className='h-screen w-screen flex'>
-            <section className="left relative flex flex-col h-screen min-w-96 bg-black">
+            <section className="left relative flex flex-col h-screen min-w-100 bg-black">
                 <header className='flex justify-between items-center p-2 px-4 w-full bg-slate-100 absolute z-1 top-0'>
                     <button className='flex gap-2' onClick={()=>{setIsModalOpen(true)}} >
                         <i className="ri-user-add-fill mr-1"></i>
@@ -144,14 +146,14 @@ function scrollToBottom(){
                                 <small className='opacity-65 text-xs'>{msg.sender.email}</small>
                                 <div className='text-sm'>
                                     {msg.sender._id === 'ai' ?
-                                     <div className="overflow-auto bg-gray-900 text-gray-300">
-                                        <Markdown>{msg.message}</Markdown>
+                                    WriteAiMessage(msg.message)
+                                    : <p>{msg.message}</p>
+                                    }
+                                    {/* //  <div className="overflow-auto bg-gray-900 text-gray-300"> */}
+                                        {/* <Markdown>{msg.message}</Markdown> */}
                                         
-                                    </div>
+                                    {/* // </div> */}
 
-                                        // WriteAiMessage(msg.message)
-                                        : <p>{msg.message}</p>
-                                        }
                                 </div>
                             </div>
                         ))}

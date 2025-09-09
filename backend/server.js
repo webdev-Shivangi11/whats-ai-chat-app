@@ -54,10 +54,10 @@ io.on('connection', socket=> {
       // socket.broadcast.to(socket.roomId).emit("project-message",data)
       // console.log(data);
       
-        const message = data.message;
-
-        const aiIsPresentInMessage = message.includes('@ai');
-        socket.broadcast.to(socket.roomId).emit('project-message', data)
+      const message = data.message;
+      
+      const aiIsPresentInMessage = message.includes('@ai');
+      socket.broadcast.to(socket.roomId).emit('project-message', data)
 
         if (aiIsPresentInMessage) {
 
