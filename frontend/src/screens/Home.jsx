@@ -3,6 +3,7 @@ import axios from "../config/axios"
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../context/userContext'
 import Navbar from "./Navbar"
+import sideimg from "../assets/download.png"
 const Home = () => {
 
     const { user } = useContext(UserContext)
@@ -41,42 +42,27 @@ const Home = () => {
 
     return (<>
         {/* <Navbar/> */}
-        <main className='p-4'>
-            <div className="projects h-auto flex flex-wrap gap-2  bg-gray-800 p-40">
+        <main className='flex'>
+            <div className='flex gap-10  bg-gray-800 '>
+                
+                      <div className="projects h-auto flex flex-wrap gap-2  bg-gray-800 p-10 xl:p-40">
                 <div className='flex gap-2 flex-col'>
                     {/* <h1 className='text-8xl text-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'> Build Meaningful Connection and elevate  your Career</h1> */}
                     {/* <h1 className='text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 p-4'> Build Meaningful Connection and elevate  your Career</h1> */}
-                    <h1 className='text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-bl from-[#e879f9] via-[#4ade80] to-[#be123c] p-4'> Build Meaningful Connection and elevate  your Career</h1>
-                    <p className='text-gray-300 text-2xl p-6'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae amet officiis maiores quia odit accusantium, modi eius repudiandae natus, architecto at neque, magni velit suscipit laboriosam labore atque cumque alias.</p>
+                    <h1 className='text-6xl xl:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-bl from-[#e879f9] via-[#4ade80] to-[#be123c] p-4'> Build Meaningful Connection and elevate  your Career</h1>
+                    <p className='text-gray-300 text-lg p-6 xl:text-2xl'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae amet officiis maiores quia odit accusantium, modi eius repudiandae natus, architecto at neque, magni velit suscipit laboriosam labore atque cumque alias.</p>
                         </div>                
-                  <div>
-                     <button
+                  <div className='flex flex-col gap-10'>
+                    <div>
+                         <button
                     onClick={() => setIsModalOpen(true)}
-                    className="project p-4 border text-xl font-mono text-gray-50 border-slate-300 rounded-md ">
+                    className="project p-4 border lg:text-xl font-mono text-gray-50 border-slate-300 rounded-md ">
                     New Project
                     <i className="ri-link ml-2 text-white"></i>
                      </button>
-{/* {project.map((project) => (
-  <div
-    key={project._id}
-    onClick={() => {
-      navigate('/all-project', {
-        state: { project }
-      })
-    }}
-    className="project flex flex-col gap-2 cursor-pointer p-4 border border-slate-300 rounded-md min-w-52 hover:bg-slate-200 hover:scale-[1.02] transition-transform duration-200 bg-white"
-  >
-    <h2 className="font-semibold text-lg text-gray-800">{project.name}</h2>
-    <div className="flex gap-2 text-sm text-gray-600">
-      <p>
-        <i className="ri-user-line"></i> Collaborators:
-      </p>
-      <span>{project.users?.length || 0}</span>
-    </div>
-  </div>
-))} */}
-
-
+                    </div>
+                    <div className=' flex flex-col gap-5'>
+                     <div className="text-4xl font-mono text-green-400 py-3 hover:underline">My Projects</div>
                                 {
                     project.map((project) => (
                         <div key={project._id}
@@ -85,12 +71,12 @@ const Home = () => {
                                     state: { project }
                                 })
                             }}
-                            className="project flex flex-col gap-2 cursor-pointer p-4 border border-slate-300 rounded-md min-w-52 hover:bg-slate-200">
+                            className="project flex-col gap-2 cursor-pointer p-2 border border-slate-300 rounded-md min-w-auto hover:bg-gradient-to-t from-[#e879f9] via-[#4ade80] to-[#da6381]">
                             <h2
-                                className='font-semibold'
+                                className='font-semibold text-white'
                             >{project.name}</h2>
 
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 text-gray-500 text-lg hover:text-black">
                                 <p> <small> <i className="ri-user-line"></i> Collaborators</small> :</p>
                                 {project.users.length}
                             </div>
@@ -98,11 +84,15 @@ const Home = () => {
                         </div>
                     ))
                 }
-                   </div>      
+                   </div>   
+                   </div>   
 
 
 
             </div>
+            <div className=' p-20' ><img src={sideimg} alt="" /></div>
+            </div>
+      
 
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">

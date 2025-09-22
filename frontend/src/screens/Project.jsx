@@ -28,8 +28,8 @@ function SyntaxHighlightedCode(props) {
 function Project() {
   const location=useLocation()
 //   console.log(location.state)
-   const [ isSidePanelOpen, setIsSidePanelOpen ] = useState(false)
-     const [ isModalOpen, setIsModalOpen ] = useState(false)
+const [ isSidePanelOpen, setIsSidePanelOpen ] = useState(false)
+const [ isModalOpen, setIsModalOpen ] = useState(false)
 const [ selectedUserId, setSelectedUserId ] = useState([]) 
 const [project, setProject] = useState(location.state.project)
 
@@ -37,6 +37,16 @@ const [users, setUsers] = useState([])
 const {user}=useContext(UserContext)
 const [message, setMessage] = useState("")
 const [messages, setMessages] = useState([])
+// const [fileTree, setFileTree] = useState({
+//     "app.js":{
+//         content:`const express=require("express");`
+//     },
+//    "package.json":{
+//         content:{
+//             "name":"temp-server",
+//         }
+//     }
+// })
     const navigate = useNavigate()
 const messageBox=React.createRef()
 
@@ -77,24 +87,25 @@ setMessages(prevMessages => [ ...prevMessages, { sender: user, message } ]) // U
 setMessage("")
 
 }
-function WriteAiMessage(message) {
+// function WriteAiMessage(message) {
 
-        const messageObject = JSON.parse(message)
+//         // const messageObject = JSON.parse(message)
 
-        return (
-            <div
-                className='overflow-auto bg-slate-950 text-white rounded-sm p-2'
-            >
-                <Markdown
-                    children={messageObject.text}
-                    options={{
-                        overrides: {
-                            code: SyntaxHighlightedCode,
-                        },
-                    }}
-                />
-            </div>)
-    }
+//         return (
+//             <div
+//                 className='overflow-auto bg-slate-950 text-white rounded-sm p-2'
+//             >
+//                 <Markdown
+//                     children={messageObject.text}
+//                     options={{
+//                         overrides: {
+//                             code: SyntaxHighlightedCode,
+//                         },
+//                     }}
+//                 />
+//             </div>)
+//     }
+
 useEffect(()=>{
 initializeSocket(project._id)
 receiveMessage("project-message",data=>{
@@ -124,7 +135,7 @@ function scrollToBottom(){
 }
   return (
  <main className='h-screen w-screen flex'>
-            <section className="left relative flex flex-col h-screen min-w-100 bg-black">
+            <section className="left relative flex flex-col h-screen min-w-150 bg-black ">
                 <header className='flex justify-between items-center p-2 px-4 w-full bg-slate-100 absolute z-1 top-0'>
                     <button className='flex gap-2' onClick={()=>{setIsModalOpen(true)}} >
                         <i className="ri-user-add-fill mr-1"></i>
@@ -142,17 +153,26 @@ function scrollToBottom(){
                     // className="message-box p-1 flex-grow flex flex-col gap-3 overflow-auto max-h-full scrollbar-hide mt-4">
                       className="message-box p-1 flex-grow flex flex-col gap-1 overflow-auto max-h-full scrollbar-hide">
                         {messages.map((msg, index) => (
-                            <div key={index} className={`${msg.sender._id === 'ai' ? 'max-w-80' : 'max-w-52'} ${msg.sender._id == user._id.toString() && 'ml-auto'}  message flex flex-col p-2 bg-slate-50 w-fit rounded-md`}>
+                            <div key={index} className={`${msg.sender._id === 'ai' ? 'max-w-130' : 'max-w-80'} ${msg.sender._id == user._id.toString() && 'ml-auto'}  message flex flex-col p-2 bg-slate-50 w-fit rounded-md`}>
                                 <small className='opacity-65 text-xs'>{msg.sender.email}</small>
                                 <div className='text-sm'>
                                     {msg.sender._id === 'ai' ?
-                                    WriteAiMessage(msg.message)
+
+                                    // WriteAiMessage(msg.message)
+                                    <div className="overflow-auto bg-gray-900 text-white ">
+                                        <Markdown 
+                                    //     options={{
+                                    //          overrides: {
+                                    //          code: {
+                                    //         component: SyntaxHighlightedCode,
+                                    //             },
+                                    //             },
+                                    //  }}
+                                        >{msg.message}</Markdown>
+                                    </div>
                                     : <p>{msg.message}</p>
                                     }
-                                    {/* //  <div className="overflow-auto bg-gray-900 text-gray-300"> */}
-                                        {/* <Markdown>{msg.message}</Markdown> */}
-                                        
-                                    {/* // </div> */}
+                                    
 
                                 </div>
                             </div>
@@ -199,6 +219,9 @@ function scrollToBottom(){
 
             </section>
 
+<section className="right bg-red-50 flexgrow overflow-auto h-full w-1/3 p-4">
+    
+</section>
           {/* //adding modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">

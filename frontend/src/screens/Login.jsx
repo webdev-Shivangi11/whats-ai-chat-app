@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from '../config/axios'
 import { UserContext } from '../context/userContext'
+import chatbg from "../assets/chatbg.mp4"
 const Login = () => {
 
 
@@ -32,7 +33,8 @@ const Login = () => {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="min-h-screen flex items-center justify-center z-50 bg-gray-950">
+        {/* // <div className="min-h-screen flex items-center justify-center bg-[url(chatbg.mp4)]"> */}
             <div className="bg-gray-800 p-8 rounded-lg  w-full max-w-md 
             shadow-2xl shadow-green-500">
                 <h2 className="text-3xl font-bold text-green-400 mb-6">Login</h2>
