@@ -37,16 +37,7 @@ const [users, setUsers] = useState([])
 const {user}=useContext(UserContext)
 const [message, setMessage] = useState("")
 const [messages, setMessages] = useState([])
-// const [fileTree, setFileTree] = useState({
-//     "app.js":{
-//         content:`const express=require("express");`
-//     },
-//    "package.json":{
-//         content:{
-//             "name":"temp-server",
-//         }
-//     }
-// })
+
     const navigate = useNavigate()
 const messageBox=React.createRef()
 
@@ -78,6 +69,7 @@ const handleUserClick=(id)=>{
     }
 
 function send(){
+      if (!message.trim()) return;
     sendMessage("project-message",{
     message,
     sender:user
@@ -87,31 +79,28 @@ setMessages(prevMessages => [ ...prevMessages, { sender: user, message } ]) // U
 setMessage("")
 
 }
-// function WriteAiMessage(message) {
-
-//         // const messageObject = JSON.parse(message)
-
-//         return (
-//             <div
-//                 className='overflow-auto bg-slate-950 text-white rounded-sm p-2'
-//             >
-//                 <Markdown
-//                     children={messageObject.text}
-//                     options={{
-//                         overrides: {
-//                             code: SyntaxHighlightedCode,
-//                         },
-//                     }}
-//                 />
-//             </div>)
-//     }
 
 useEffect(()=>{
 initializeSocket(project._id)
-receiveMessage("project-message",data=>{
-    console.log(data)
-    setMessages(prevMessages=>[...prevMessages,data])
-})
+
+//  const fetchMessages = async () => {
+//     const res = await fetch(`/api/messages/${user._id}`);
+//     const data = await res.json();
+//     setMessages(data);
+//   };
+
+//   fetchMessages();
+
+  const handler = (data) => {
+    console.log("Received:", data);
+    setMessages(prevMessages => [...prevMessages, data]);
+  };
+
+  receiveMessage("project-message", handler);
+// receiveMessage("project-message",data=>{
+//     console.log(data)
+//     setMessages(prevMessages=>[...prevMessages,data])
+// })
  axios.get(`/projects/get-project/${location.state.project._id}`).then(res => {
 
     //  console.log(location.state.project._id)
@@ -180,11 +169,18 @@ function scrollToBottom(){
                         
                     </div>
 
-                    <div className="inputField w-full flex absolute bottom-0">
+                    <div className="inputField w-full  flex absolute bottom-0  p-2">
+
+                        <button
+                            // onClick={send}
+                            className='px-5 bg-slate-950 text-white'><i className="ri-attachment-line text-white"></i></button>
+
                         <input
                             onChange={(e) => setMessage(e.target.value)}
+                            
                             value={message}
-                            className='p-2 px-4 border-none outline flex-grow text-gray-400' type="text" placeholder='Enter message' />
+                            className='p-2 px-4 appearance-none border-none outline-none bg-transparent flex-grow text-gray-400' 
+                            type="text" placeholder='Enter message' />
                         <button
                             onClick={send}
                             className='px-5 bg-slate-950 text-white'><i className="ri-send-plane-fill text-white"></i></button>

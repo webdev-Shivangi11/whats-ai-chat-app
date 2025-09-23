@@ -7,7 +7,7 @@ const Register = () => {
 
     const [ email, setEmail ] = useState('')
     const [ password, setPassword ] = useState('')
-
+// const avtar=useFileHandler("")
     const { setUser } = useContext(UserContext)
 
     const navigate = useNavigate()
@@ -35,9 +35,16 @@ const Register = () => {
         <div className="min-h-screen flex items-center justify-center bg-gray-900">
             <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
                 <h2 className="text-2xl font-bold text-white mb-6">Register</h2>
+
                 <form
                     onSubmit={submitHandler}
                 >
+                    <div className="flex justify-center items-center" >
+                    <div className=' flex h-20 w-20 bg-green-400  rounded-full'>
+                        <input className='opacity-0 ' type="file" name="profile_pic" id="" onChange={(avatar)=>{avatar.preview }} />
+                    </div>
+{/* <i className='camera-line'></i> */}
+                    </div>
                     <div className="mb-4">
                         <label className="block text-gray-400 mb-2" htmlFor="email">Email</label>
                         <input
