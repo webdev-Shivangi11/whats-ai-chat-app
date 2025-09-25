@@ -1,13 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useState ,useRef,useEffect,useContext } from 'react'
 import { useLocation ,useNavigate} from 'react-router-dom'
- import { useState } from 'react' 
  import axios from '../config/axios'
  import { initializeSocket, receiveMessage, sendMessage } from '../config/socket'
 import { UserContext } from '../context/userContext'
-import { useContext } from 'react'
 import Markdown from 'markdown-to-jsx'
 // import hljs from 'highlight.js';
-import { useRef } from 'react'
 
 
 function SyntaxHighlightedCode(props) {
@@ -37,6 +34,7 @@ const [users, setUsers] = useState([])
 const {user}=useContext(UserContext)
 const [message, setMessage] = useState("")
 const [messages, setMessages] = useState([])
+const [isAITyping, setIsAITyping] = useState(false);
 
     const navigate = useNavigate()
 const messageBox=React.createRef()
@@ -67,51 +65,131 @@ const handleUserClick=(id)=>{
             console.log(err)
         })
     }
-
-function send(){
-      if (!message.trim()) return;
-    sendMessage("project-message",{
-    message,
-    sender:user
-})
-console.log("Sender Mmessage",message)
-setMessages(prevMessages => [ ...prevMessages, { sender: user, message } ]) // Update messages state
+const  handleKeyDown = (e)=>{
+  if(e.key==="Enter" && !e.shiftKey){
+    e.preventDefault();
+    send()
+  }
+  }
+// function send(){
+//       if (!message.trim()) return;
+//     sendMessage("project-message",{
+//     message,
+//     sender:user
+// })
+// console.log("Sender Mmessage",message)
+// setMessages(prevMessages => [ ...prevMessages, { sender: user, message } ]) // Update messages state
     
-setMessage("")
+// setMessage("")
 
-}
+// }
+// const send = () => {
+//     if (!message.trim()) return;
 
-useEffect(()=>{
-initializeSocket(project._id)
+//     const isAICommand = message.startsWith("@ai");
 
+//     if (isAICommand) {
+//       setIsAITyping(true);
+//       setTimeout(() => {
+//         sendMessage("project-message", {
+//           message: "Here's your AI-generated response...",
+//        sender:{ _id: 'ai',
+//                     email: 'AI'}
+//         });
+//       }, 2000);
+//     } else {
+//       sendMessage("project-message", { message, sender: user });
+//       setMessages(prev => [...prev, { sender: user, message }]);
+//     }
 
+//     setMessage("");
+//   };
+const send = () => {
+  if (!message.trim()) return;
+
+  const isAICommand = message.startsWith("@ai");
+
+  if (isAICommand) {
+    // Add placeholder message
+    setMessages(prev => [
+      ...prev,
+      { sender: { _id: "ai", email: "AI" }, message: "AI is typing..." }
+    ]);
+
+    sendMessage("project-message", { message, sender: user });
+  } else {
+    sendMessage("project-message", { message, sender: user });
+    setMessages(prev => [...prev, { sender: user, message }]);
+  }
+
+  setMessage("");
+};
+useEffect(() => {
+  initializeSocket(project._id);
 
   const handler = (data) => {
     console.log("Received:", data);
-    setMessages(prevMessages => [...prevMessages, data]);
+
+    if (data.sender._id === "ai") {
+      // Replace the last AI placeholder with real response
+      setMessages(prev => {
+        const updated = [...prev];
+        const lastIndex = updated.map(m => m.sender._id).lastIndexOf("ai");
+
+        if (lastIndex !== -1) {
+          updated[lastIndex] = data; // replace
+        } else {
+          updated.push(data); // fallback (if no placeholder exists)
+        }
+
+        return updated;
+      });
+    } else {
+      setMessages(prevMessages => [...prevMessages, data]);
+    }
   };
 
   receiveMessage("project-message", handler);
-// receiveMessage("project-message",data=>{
-//     console.log(data)
-//     setMessages(prevMessages=>[...prevMessages,data])
+}, []);
+
+
+// useEffect(()=>{
+// initializeSocket(project._id)
+
+
+
+//   const handler = (data) => {
+//     console.log("Received:", data);
+//     if (data.sender._id === 'ai') {
+//         setIsAITyping(false);
+//       }
+
+//     setMessages(prevMessages => [...prevMessages, data]);
+//   };
+
+//   receiveMessage("project-message", handler);
+// // receiveMessage("project-message",data=>{
+// //     console.log(data)
+// //     setMessages(prevMessages=>[...prevMessages,data])
+// // })
+// return()=>{
+
+
+//  axios.get(`/projects/get-project/${location.state.project._id}`).then(res => {
+
+//     //  console.log(location.state.project._id)
+//             console.log(res.data.project)
+
+//             setProject(res.data.project)
+//         })
+
+// axios.get('/users/all').then(res=>{
+//   setUsers(res.data.users)
+// }).catch(err=>{
+//   console.log(err)
 // })
- axios.get(`/projects/get-project/${location.state.project._id}`).then(res => {
-
-    //  console.log(location.state.project._id)
-            console.log(res.data.project)
-
-            setProject(res.data.project)
-            // setFileTree(res.data.project.fileTree || {})
-        })
-
-axios.get('/users/all').then(res=>{
-  setUsers(res.data.users)
-}).catch(err=>{
-  console.log(err)
-})
-
-},[])
+// }
+// },[])
 
 
 function scrollToBottom(){
@@ -145,6 +223,7 @@ function scrollToBottom(){
                                     // WriteAiMessage(msg.message)
                                     <div className="overflow-auto bg-gray-900 text-white ">
                                         <Markdown 
+
                                     //     options={{
                                     //          overrides: {
                                     //          code: {
@@ -161,7 +240,10 @@ function scrollToBottom(){
                                 </div>
                             </div>
                         ))}
-                        
+                         {/* {isAITyping && (
+              <div className="text-sm text-gray-500  mb-2 typing-indicator italic">AI is typing...</div>
+            )} */}
+
                     </div>
 
                     <div className="inputField w-full  flex absolute bottom-0  p-2">
@@ -172,7 +254,7 @@ function scrollToBottom(){
 
                         <input
                             onChange={(e) => setMessage(e.target.value)}
-                            
+                            onKeyDown={handleKeyDown}
                             value={message}
                             className='p-2 px-4 appearance-none border-none outline-none bg-transparent flex-grow text-gray-400' 
                             type="text" placeholder='Enter message' />
