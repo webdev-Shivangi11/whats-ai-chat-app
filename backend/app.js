@@ -5,7 +5,8 @@ import userRoute from "./routes/userRoute.js"
 import projectRoute from "./routes/projectRoute.js";
 import cookieParser from 'cookie-parser';
 import genAiRoute from "./routes/genAiRoute.js"
-import cors from 'cors';
+import messageRoute from "./routes/messageRoute.js"
+import cors from 'cors'; 
 connect();
 
 
@@ -20,6 +21,7 @@ app.use(cookieParser());
 app.use('/users', userRoute);
 app.use('/projects', projectRoute);
 app.use("/ai",genAiRoute )
+app.use("/messages",messageRoute)
 
 
 

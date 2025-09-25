@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
-
+import dotenv from "dotenv";
+dotenv.config();
 import redisClient from "../services/redisServices.js";
 export const authUser = async (req, res, next) => {
     try {
@@ -25,6 +26,6 @@ export const authUser = async (req, res, next) => {
 
         console.log(error);
 
-        res.status(401).send({ error: 'Unauthorized User is there' });
+        res.status(401).send({ error: 'Unauthorized User is there is' });
     }
 }

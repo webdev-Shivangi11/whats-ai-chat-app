@@ -74,6 +74,7 @@ function send(){
     message,
     sender:user
 })
+console.log("Sender Mmessage",message)
 setMessages(prevMessages => [ ...prevMessages, { sender: user, message } ]) // Update messages state
     
 setMessage("")
@@ -83,13 +84,7 @@ setMessage("")
 useEffect(()=>{
 initializeSocket(project._id)
 
-//  const fetchMessages = async () => {
-//     const res = await fetch(`/api/messages/${user._id}`);
-//     const data = await res.json();
-//     setMessages(data);
-//   };
 
-//   fetchMessages();
 
   const handler = (data) => {
     console.log("Received:", data);
